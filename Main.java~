@@ -1,0 +1,50 @@
+import java.lang.StringBuilder;
+import java.lang.CharSequence;
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+
+public class Main extends Application
+{
+    public static void main(String[] args)
+    {
+	launch(args);
+    }
+
+    @Override
+    public void start(Stage window) throws Exception
+    { 	
+	HBox searchLine = new HBox();
+	Label searchLabel = new Label("Search:");
+	TextField search = new TextField("enter the movie name");
+	search.setOnAction(e -> {
+		CharSequence cs = search.getCharacters();
+		StringBuilder sb = new StringBuilder(cs.length());
+		sb.append(cs);
+		System.out.println(sb.toString());
+		    });
+	searchLine.getChildren().addAll(searchLabel, search);
+
+	HBox categoryLine = new HBox();
+	Label categoryLabel = new Label("Category:");
+	Spinner categorySpinner = new Spinner();
+	categoryLine.getChildren().addAll(categoryLabel,categorySpinner);
+
+	BorderPane borderPane = new BorderPane();
+	borderPane.setTop(searchLine);
+	borderPane.setTop(categoryLine);
+
+	Scene scene = new Scene(borderPane, 640, 480);
+	window.setScene(scene);
+	window.show();
+    }
+}
