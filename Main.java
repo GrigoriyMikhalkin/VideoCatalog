@@ -15,6 +15,8 @@ import javafx.geometry.Insets;
 
 public class Main extends Application
 {
+    private DatabaseDriver dbdriver;
+    
     public static void main(String[] args)
     {
 	launch(args);
@@ -38,6 +40,10 @@ public class Main extends Application
 	// movie ScrollBar
 	ScrollBar movieScroll = new ScrollBar();
 	movieScroll.setOrientation(Orientation.VERTICAL);
+
+	// loading db
+	dbdriver = new DatabaseDriver("jdbc:sqlite:moviedb.db","org.sqlite.JDBC");
+	dbdriver.closeConnection();
 
 	// setting layout
 
