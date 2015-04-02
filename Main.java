@@ -47,19 +47,9 @@ public class Main extends Application
 	// category Spinner
 	Spinner categorySpinner = new Spinner();
 
-	// movie ScrollBar
-	ScrollBar movieScroll = new ScrollBar();
-	movieScroll.setMin(0);
-	movieScroll.setOrientation(Orientation.VERTICAL);
-	movieScroll.setPrefHeight(180);
-	movieScroll.setMax(3);
-
-	//movie names VBox
-	VBox movieNames = new VBox();
-	movieNames.setLayoutX(movieScroll.getWidth());
-	movieNames.setSpacing(10);
-
+	//movie names ListView
 	ListView<String> movieList = new ListView<String>();
+	ObservableList<String> movieNames = FXCollections.observableArrayList();
 
 	// description Box
 	VBox description = new VBox();
@@ -67,23 +57,13 @@ public class Main extends Application
 	// loading db
 	dbdriver = new DatabaseDriver("jdbc:sqlite:moviedb.db","org.sqlite.JDBC");
 	ResultSet movies = dbdriver.getAllMovies();
-	int i=0;
 	while (movies.next()) {
-	    movieNames.getChildren().add(new Label(movies.getString(1)));
-	    i++;
+	    movieNames.add(movies.getString(1));
 	}
 	dbdriver.closeConnection();
 
-	// Group for ScrollBar and VBox
-	Group movieGroup = new Group();
-	movieGroup.getChildren().addAll(movieScroll,movieNames);
-
-	movieScroll.valueProperty().addListener(new ChangeListener<Number>() {
-		public void changed(ObservableValue<? extends Number> ov,
-				    Number old_val, Number new_val) {
-                    movieNames.setLayoutY(+new_val.doubleValue());
-            }
-        });
+	movieList.setItems(movieNames);
+	movieList.setPrefHeight(180);
 
 	// setting layout
 
@@ -99,8 +79,8 @@ public class Main extends Application
 	GridPane.setConstraints(categorySpinner,2,0);
 	grid.getChildren().add(categorySpinner);
 
-	GridPane.setConstraints(movieGroup,0,2);
-	grid.getChildren().add(movieGroup);
+	GridPane.setConstraints(movieList,0,2);
+	grid.getChildren().add(movieList);
 
 	GridPane.setConstraints(description,0,3);
 	grid.getChildren().add(description);
