@@ -1,0 +1,5 @@
+#!/bin/sh
+
+javac ./src/Main.java ./src/DatabaseDriver.java -d ./bin/
+cd bin/
+java -classpath '.:../lib/*' Main

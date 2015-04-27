@@ -55,7 +55,10 @@ public class Main extends Application
 	VBox description = new VBox();
 
 	// loading db
-	dbdriver = new DatabaseDriver("jdbc:sqlite:moviedb.db","org.sqlite.JDBC");
+	dbdriver = new DatabaseDriver("jdbc:sqlite:../resources/moviedb.db","org.sqlite.JDBC");
+
+	// updating catalog
+	updateCatalog("\\");
 	ResultSet movies = dbdriver.getAllMovies();
 	while (movies.next()) {
 	    movieNames.add(movies.getString(1));
@@ -89,4 +92,16 @@ public class Main extends Application
 	window.setScene(scene);
 	window.show();
     }
+
+    private void updateCatalog(String path) throws Exception
+    {
+	// load all elements in directory
+	String[] elements = {"test"};
+	// load elements into db
+	for(String element : elements)
+	    {
+		dbdriver.setNewMovie(element, "test", path+element);
+	    }
+    }
+
 }
