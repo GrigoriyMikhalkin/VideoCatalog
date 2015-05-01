@@ -1,0 +1,5 @@
+#!/bin/sh
+
+javac -cp '.:./lib/*' ./src/DatabaseDriver.java ./test/DatabaseDriverTest.java -d ./bin/
+cd bin/
+java -classpath '.:../lib/*' org.junit.runner.JUnitCore DatabaseDriverTest

@@ -21,6 +21,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
+import java.io.File;
+import java.util.List;
+import java.util.ArrayList;
 
 
 public class Main extends Application
@@ -58,7 +61,7 @@ public class Main extends Application
 	dbdriver = new DatabaseDriver("jdbc:sqlite:../resources/moviedb.db","org.sqlite.JDBC");
 
 	// updating catalog
-	updateCatalog("\\");
+	updateCatalog("/home/grigoriy/Movies/Movies/");
 	ResultSet movies = dbdriver.getAllMovies();
 	while (movies.next()) {
 	    movieNames.add(movies.getString(1));
@@ -96,11 +99,32 @@ public class Main extends Application
     private void updateCatalog(String path) throws Exception
     {
 	// load all elements in directory
-	String[] elements = {"test"};
+	List<String> elements = new ArrayList<String>();
+	List<String> names = new ArrayList<String>();
+
+	File folder = new File(path);
+
+	for (File file: folder.listFiles())
+	    {
+		if (file.isDirectory()) continue;
+		else
+		    {
+			elements.add(file.getName());
+		    }
+	    }
+
+	ResultSet rs = dbdriver.getAllMovies();
+	while(rs.next())
+	    {
+		names.add(rs.getString(1));
+	    }
+	
 	// load elements into db
 	for(String element : elements)
 	    {
-		dbdriver.setNewMovie(element, "test", path+element);
+		if (!names.contains(element)){
+		    dbdriver.setNewMovie(element, "test", path+element);
+		}
 	    }
     }
 

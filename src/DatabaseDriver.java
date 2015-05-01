@@ -54,6 +54,13 @@ public class DatabaseDriver
 	// return(movies);
     }
 
+    public boolean notExists(String movie) throws SQLException
+    {
+	ResultSet path = statement.executeQuery(String.format("select path from movie where name='%s'", movie));
+	System.out.println(path.first());
+	return(path.isClosed());
+    }
+
     public void closeConnection()
     {
 	try	    {
