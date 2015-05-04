@@ -31,6 +31,22 @@ public class DatabaseDriverTest
     }
 
     @Test
+    public void testGetMovies() throws Exception
+    {
+	testDD = new DatabaseDriver("jdbc:sqlite:../resources/testdb.db","org.sqlite.JDBC");
+
+	testDD.setNewMovie("tstMovie", "test", "test");
+	ResultSet t = testDD.getMovies("tst");
+
+	t.next();
+	String name = t.getString(1);
+	
+	testDD.closeConnection();
+	
+	assertEquals("tstMovie", name);
+    }
+
+    @Test
     public void testGetMoviePath() throws SQLException
     {}
 

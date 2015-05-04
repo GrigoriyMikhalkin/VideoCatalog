@@ -29,6 +29,7 @@ import java.util.ArrayList;
 public class Main extends Application
 {
     private DatabaseDriver dbdriver;
+    private Stage window;
     
     public static void main(String[] args)
     {
@@ -36,62 +37,22 @@ public class Main extends Application
     }
 
     @Override
-    public void start(Stage window) throws Exception
-    { 	
-	// defining UI elements
-	// search TextField
-	TextField search = new TextField("enter the movie name");
-	search.setOnAction(e -> System.out.println(search.getText()));
-
-	// search Button -- same behavior as pressing <Enter>
-	Button searchButton = new Button("Search");
-	searchButton.setOnAction(e -> System.out.println(search.getText()));
-
-	// category Spinner
-	Spinner categorySpinner = new Spinner();
-
-	//movie names ListView
-	ListView<String> movieList = new ListView<String>();
-	ObservableList<String> movieNames = FXCollections.observableArrayList();
-
-	// description Box
-	VBox description = new VBox();
-
+    public void start(Stage stage) throws Exception
+    {
+	window = stage;
+	
 	// loading db
 	dbdriver = new DatabaseDriver("jdbc:sqlite:../resources/moviedb.db","org.sqlite.JDBC");
 
 	// updating catalog
 	updateCatalog("/home/grigoriy/Movies/Movies/");
+	
 	ResultSet movies = dbdriver.getAllMovies();
-	while (movies.next()) {
-	    movieNames.add(movies.getString(1));
-	}
+
+	Scene scene = setScene(movies);
+
 	dbdriver.closeConnection();
-
-	movieList.setItems(movieNames);
-	movieList.setPrefHeight(180);
-
-	// setting layout
-
-	GridPane grid = new GridPane();
-	grid.setPadding(new Insets(10, 10, 10, 10));
-	grid.setVgap(5);
-	grid.setHgap(5);
-
-	GridPane.setConstraints(search,0,0);
-	GridPane.setConstraints(searchButton,1,0);
-	grid.getChildren().addAll(search,searchButton);
-
-	GridPane.setConstraints(categorySpinner,2,0);
-	grid.getChildren().add(categorySpinner);
-
-	GridPane.setConstraints(movieList,0,2);
-	grid.getChildren().add(movieList);
-
-	GridPane.setConstraints(description,0,3);
-	grid.getChildren().add(description);
-
-	Scene scene = new Scene(grid, 640, 480);
+	
 	window.setScene(scene);
 	window.show();
     }
@@ -126,6 +87,83 @@ public class Main extends Application
 		    dbdriver.setNewMovie(element, "test", path+element);
 		}
 	    }
+    }
+
+    private void updateBySearchRequest(String searchRequest) throws Exception
+    {
+	dbdriver = new DatabaseDriver("jdbc:sqlite:../resources/moviedb.db","org.sqlite.JDBC");
+
+	ResultSet movies = dbdriver.getMovies(searchRequest);
+
+	// set Scene
+
+	dbdriver.closeConnection();
+    }
+
+    private void updateByCategory(String categoryName) throws Exception
+    {
+	dbdriver = new DatabaseDriver("jdbc:sqlite:../resources/moviedb.db","org.sqlite.JDBC");
+
+	ResultSet movies = dbdriver.getCategory(categoryName);
+
+	// set Scene
+
+	dbdriver.closeConnection();
+    }
+
+    private Scene setScene(ResultSet movies) throws Exception
+    {
+	// defining UI elements
+	// search TextField
+	TextField search = new TextField("enter the movie name");
+	search.setOnAction(e -> System.out.println(search.getText()));
+
+	// search Button -- same behavior as pressing <Enter>
+	Button searchButton = new Button("Search");
+	searchButton.setOnAction(e -> System.out.println(search.getText()));
+
+	// category Spinner
+	Spinner categorySpinner = new Spinner();
+
+	//movie names ListView
+	ListView<String> movieList = new ListView<String>();
+	ObservableList<String> movieNames = FXCollections.observableArrayList();
+
+	// description Box
+	VBox description = new VBox();
+
+	// filling movieNames
+	while (movies.next()) {
+	    movieNames.add(movies.getString(1));
+	}
+	
+	movieList.setItems(movieNames);
+	movieList.setPrefHeight(400);
+	movieList.setPrefWidth(350);
+	
+
+	// setting layout
+
+	GridPane grid = new GridPane();
+	grid.setPadding(new Insets(10, 10, 10, 10));
+	grid.setVgap(5);
+	grid.setHgap(5);
+
+	GridPane.setConstraints(search,0,0);
+	GridPane.setConstraints(searchButton,1,0);
+	grid.getChildren().addAll(search,searchButton);
+
+	GridPane.setConstraints(categorySpinner,2,0);
+	grid.getChildren().add(categorySpinner);
+
+	GridPane.setConstraints(movieList,0,2);
+	grid.getChildren().add(movieList);
+
+	GridPane.setConstraints(description,0,3);
+	grid.getChildren().add(description);
+
+	Scene scene = new Scene(grid, 640, 480);
+	return(scene);
     }
 
 }

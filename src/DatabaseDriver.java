@@ -36,6 +36,12 @@ public class DatabaseDriver
 	return(movies);
     }
 
+    public ResultSet getMovies(String name) throws SQLException
+    {
+	ResultSet movies = statement.executeQuery(String.format("select name from movie where name like '%s'", name+"%"));
+	return(movies);
+    }
+
     public void setNewPath(String path, String category) throws SQLException
     {
 	statement.executeUpdate(String.format("insert into category values('%s','%s')", path, category));
