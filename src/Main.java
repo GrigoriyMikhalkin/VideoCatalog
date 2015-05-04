@@ -95,9 +95,11 @@ public class Main extends Application
 
 	ResultSet movies = dbdriver.getMovies(searchRequest);
 
-	// set Scene
+	Scene scene = setScene(movies);
 
 	dbdriver.closeConnection();
+
+	window.setScene(scene);
     }
 
     private void updateByCategory(String categoryName) throws Exception
@@ -106,9 +108,11 @@ public class Main extends Application
 
 	ResultSet movies = dbdriver.getCategory(categoryName);
 
-	// set Scene
+	Scene scene = setScene(movies);
 
 	dbdriver.closeConnection();
+
+	window.setScene(scene);
     }
 
     private Scene setScene(ResultSet movies) throws Exception
@@ -116,11 +120,25 @@ public class Main extends Application
 	// defining UI elements
 	// search TextField
 	TextField search = new TextField("enter the movie name");
-	search.setOnAction(e -> System.out.println(search.getText()));
+	search.setOnAction(e -> {
+		try {
+		    updateBySearchRequest(search.getText());
+		}
+		catch(Exception exc){
+		    System.out.println("Error in setScene method in search.setOnAction");
+		}
+	    });
 
 	// search Button -- same behavior as pressing <Enter>
 	Button searchButton = new Button("Search");
-	searchButton.setOnAction(e -> System.out.println(search.getText()));
+	searchButton.setOnAction(e -> {
+		try {
+		    updateBySearchRequest(search.getText());
+		}
+		catch(Exception exc){
+		    System.out.println("Error in setScene method in search.setOnAction");
+		}
+	    });
 
 	// category Spinner
 	Spinner categorySpinner = new Spinner();
