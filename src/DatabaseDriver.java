@@ -27,6 +27,7 @@ public class DatabaseDriver
     private static void createDB(Statement stmnt) throws SQLException
     {
 	stmnt.executeUpdate("create table movie (name string, category string, path string)");
+	stmnt.executeUpdate("create table category (path string, name string)");
     }
 
     public ResultSet getAllMovies() throws SQLException
@@ -35,6 +36,23 @@ public class DatabaseDriver
 	return(movies);
     }
 
+    public void setNewPath(String path, String category) throws SQLException
+    {
+	statement.executeUpdate(String.format("insert into category values('%s','%s')", path, category));
+    }
+    
+    public ResultSet getPaths() throws SQLException
+    {
+	ResultSet paths = statement.executeQuery("select path from category");
+	return(paths);
+    }
+
+    public ResultSet getPathCategory(String path) throws SQLException
+    {
+	ResultSet category = statement.executeQuery(String.format("select name from category where path='%s'", path));
+	return(category);
+    }
+    
     public ResultSet getCategory(String category) throws SQLException
     {
 	ResultSet movies = statement.executeQuery(String.format("select name from movie where category='%s'", category));
