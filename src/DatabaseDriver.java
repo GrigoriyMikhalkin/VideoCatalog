@@ -78,6 +78,12 @@ public class DatabaseDriver
 	// return(movies);
     }
 
+    public String getMovieCategory(String movie) throws SQLException
+    {
+	ResultSet category = statement.executeQuery(String.format("select category from movie where name='%s'", movie));
+	return(category.getString(1));
+    }
+
     public boolean notExists(String movie) throws SQLException
     {
 	ResultSet path = statement.executeQuery(String.format("select path from movie where name='%s'", movie));

@@ -56,17 +56,23 @@ public class DatabaseDriverTest
 	testDD = new DatabaseDriver("jdbc:sqlite:../resources/testdb.db","org.sqlite.JDBC");
 	testDD.setNewPath("test","test");
 	testDD.setNewPath("test2","test2");
+	testDD.setNewPath("testdaf","testz");
+	testDD.setNewPath("testdaaf","tesatz");
 	ResultSet testrs = testDD.getPaths();
 
 	testrs.next();
 	String t1 = testrs.getString(1);
 	testrs.next();
 	String t2 = testrs.getString(1);
+	testrs.next();
+	String t3 = testrs.getString(1);
+	testrs.next();
+	String t4 = testrs.getString(1);
 
 	testDD.closeConnection();
 	
-	String[] exp = {"test","test2"};
-	String[] res = {t1,t2};
+	String[] exp = {"test","test2","testdaf","testdaaf"};
+	String[] res = {t1,t2,t3,t4};
 	
 	assertArrayEquals(exp,res);
 	
